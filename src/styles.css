@@ -135,6 +135,17 @@ form button:hover {
   transform: scale(1.1);
 }
 
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #999;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
 .edit-state {
   height: 100%;
   min-height: inherit;
