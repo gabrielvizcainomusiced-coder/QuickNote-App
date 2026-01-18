@@ -1,22 +1,30 @@
+/* Mobile-First Responsive Design */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 body {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #333333;
   margin: 0;
   padding: 0;
+  /* Prevent pull-to-refresh in PWA */
+  overscroll-behavior-y: contain;
+  /* Improve touch scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 html, body {
   height: 100%;
   margin: 0;
+  /* Prevent zoom on input focus (iOS) */
+  touch-action: manipulation;
 }
 
 .content {
@@ -29,27 +37,34 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* Safe area for iPhone notch */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Header - Mobile Optimized */
 .app-header {
   width: 100%;
-  padding: 16px 32px;
+  padding: 16px 20px;
   background: #ffffff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   position: sticky;
   top: 0;
   z-index: 100;
+  /* Safe area for notch */
+  padding-top: max(16px, env(safe-area-inset-top));
 }
 
 .logo {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.5px;
   color: #333333;
   margin: 0;
+  user-select: none;
 }
 
 .logo .bolt {
@@ -69,29 +84,45 @@ html, body {
   display: block;
 }
 
+/* Form - Mobile Touch Optimized */
 form {
   position: relative;
-  width: 480px;
-  margin: 30px auto 20px auto;
+  width: 100%;
+  max-width: 480px;
+  margin: 20px auto;
   background: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 form input,
 form textarea {
   width: 100%;
-   box-sizing: border-box;
+  box-sizing: border-box;
   border: 0;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 16px; /* Prevents zoom on iOS */
   line-height: 1.4;
   outline: none;
-  border-radius: 4px;
+  border-radius: 8px;
   resize: none;
+  background-color: #f9f9f9;
+  /* Better touch feedback */
+  transition: background-color 0.2s;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(75, 157, 169, 0.2);
+}
+
+form textarea {
+  min-height: 100px;
 }
 
 input::placeholder,
@@ -100,52 +131,134 @@ textarea::placeholder {
   color: #999999;
 }
 
-form input:focus,
-form textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(75, 157, 169, 0.2);
-}
-
+/* Button - Larger touch target */
 form button {
   position: absolute;
-  right: -16px;
-  bottom: -16px;
+  right: -8px;
+  bottom: -8px;
   background: #4b9da9;
   color: #ffffff;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  width: 56px;
+  height: 56px;
+  box-shadow: 0 4px 12px rgba(75, 157, 169, 0.4);
   cursor: pointer;
   outline: none;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   line-height: 1;
   text-align: center;
   border: none;
+  /* Better touch feedback */
+  transition: transform 0.1s, box-shadow 0.2s;
+  touch-action: manipulation;
 }
 
-form button:focus,
-.note button:focus {
+form button:active {
+  transform: scale(0.95);
+}
+
+form button:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(75, 157, 169, 0.35);
+  box-shadow: 0 0 0 4px rgba(75, 157, 169, 0.35);
 }
 
-form button:hover {
-  background: #367c87;
-  transform: scale(1.1);
+/* Notes Container - Mobile Grid */
+.notes-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 20px;
+  align-items: start;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 80px 20px;
-  color: #999;
+/* Tablet and larger */
+@media (min-width: 600px) {
+  .notes-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 30px;
+  }
 }
 
-.empty-state p {
-  font-size: 1.2rem;
+/* Note Card - Mobile Optimized */
+.note {
+  position: relative;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 16px 16px 48px 16px;
+  width: 100%;
   margin: 0;
+  color: #333333;
+  overflow: visible;
+  animation: noteFadeIn 0.25s ease-out;
+  /* Touch optimization */
+  touch-action: pan-y;
 }
 
+.note-body {
+  min-height: 100%;
+  overflow-y: auto;
+  padding-bottom: 12px;
+}
+
+.note h1 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+}
+
+.note p {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+/* Note Buttons - Larger for touch */
+.note button {
+  position: absolute;
+  background-color: #4b9da9;
+  color: #ffffff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+  z-index: 10;
+  /* Ensure minimum touch target size */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  touch-action: manipulation;
+}
+
+.note button:active {
+  transform: scale(0.92);
+}
+
+.note button:hover {
+  background-color: #367c87;
+}
+
+.note .delete-btn {
+  right: -12px;
+  bottom: -12px;
+}
+
+.note .edit-btn {
+  right: 40px;
+  bottom: -12px;
+}
+
+/* Edit State */
 .edit-state {
   height: 100%;
   min-height: inherit;
@@ -157,42 +270,36 @@ form button:hover {
 .edit-state textarea {
   width: 100%;
   border: 0;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 16px; /* Prevents iOS zoom */
   line-height: 1.4;
   outline: none;
-  border-radius: 4px;
+  border-radius: 8px;
   resize: none;
+  background-color: #f9f9f9;
 }
 
 .edit-title {
-  font-size: 1.5em;   
+  font-size: 1.3rem;
   font-weight: 600;
-  margin: 10px 0;
-  border: none;
-  outline: none;
-  font-family: inherit;
+  margin: 8px 0;
   flex-shrink: 0;
 }
 
 .edit-content {
-  font-size: 1.1em;  
+  font-size: 1rem;
   line-height: 1.5;
   min-height: 0;
-  border: none;
-  outline: none;
-  font-family: inherit;
-  white-space: pre-wrap;
-  resize: none;
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
 }
 
 .edit-state input:focus,
 .edit-state textarea:focus {
-  box-shadow: 0 0 0 2px rgba(75, 157, 169, 0.2);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(75, 157, 169, 0.2);
 }
 
 .edit-actions {
@@ -202,104 +309,26 @@ form button:hover {
 }
 
 .note .save-btn {
-  right: -18px;
-  bottom: -18px;
-  background-color: #2ecc71; 
+  right: -12px;
+  bottom: -12px;
+  background-color: #2ecc71;
 }
 
 .note .cancel-btn {
-  right: 25px; 
-  bottom: -18px;
-  background-color: #95a5a6; 
+  right: 40px;
+  bottom: -12px;
+  background-color: #95a5a6;
 }
 
-.note {
-  position: relative;
-  background-color: #ffffff;
-  box-shadow: 0 4px 10px #ccc;
-  border-radius: 10px;
-  padding: 10px 10px 28px 10px; 
-  width: 100%;
-  margin: 0;
-  color: #333333;
-  overflow: visible;
-  animation: noteFadeIn 0.25s ease-out;
-  will-change: transform;
-  display: flex;
-  flex-direction: column;
-}
-
-.note-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow-y: auto;
-  padding-bottom: 12px;
-}
-
-.note h1 {
-  font-size: 1.5em;
-  margin-top: 10px;
-}
-
-.note p {
-  font-size: 1.1em;
-  margin-bottom: 10px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-.note button {
-  position: absolute;
-  right: -18px;
-  bottom: -18px;
-  background-color: #4b9da9;
-  color: #ffffff;
-  border: none;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  cursor: pointer;
-  outline: none;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  z-index: 10;
-}
-
-.note button:hover {
-  color: #f6f3c2;
-  transform: scale(1.1);
-  background-color: #367c87;
-}
-
-.note button:active {
-  transform: scale(0.95);
-}
-
-.note .delete-btn {
-  right: -18px;
-  bottom: -18px;
-}
-
-.note .edit-btn {
-  right: 25px; 
-  bottom: -18px;
-}
-
-.notes-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 50px;
-  padding: 50px;
-  align-items: start;
-}
-
+/* Footer */
 footer {
   margin-top: auto;
   text-align: center;
-  padding: 15px 0;
+  padding: 20px;
   color: #777777;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  /* Safe area for home indicator */
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
 }
 
 .footer-content {
@@ -308,6 +337,7 @@ footer {
   gap: 6px;
 }
 
+/* Animations */
 @keyframes noteFadeIn {
   from {
     opacity: 0;
@@ -316,5 +346,72 @@ footer {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* PWA Install Prompt */
+.install-prompt {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: #4b9da9;
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  animation: slideUp 0.3s ease;
+}
+
+.install-prompt button {
+  background: white;
+  color: #4b9da9;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .app-header {
+    padding: 12px 20px;
+  }
+  
+  .logo {
+    font-size: 1.25rem;
+  }
+  
+  form {
+    margin: 16px auto;
+  }
+}
+
+/* Desktop view */
+@media (min-width: 768px) {
+  .notes-container {
+    padding: 50px;
+    gap: 50px;
+  }
+  
+  form {
+    margin: 30px auto 20px auto;
   }
 }
